@@ -484,7 +484,7 @@
               }
               $("#eth_network").html(networkDisplay);
               $("#warning").text(warning);
-              $("#luckyDrawContractAddress").val(contractAddress);
+              $("#luckyDrawContractAddress").text(contractAddress);
               
               
               web3.eth.getAccounts().then(accounts => {
@@ -699,7 +699,7 @@
       }
 
       function openAppContractOnEtherScan() {
-        let address = $("#luckyDrawContractAddress").val()
+        let address = $("#luckyDrawContractAddress").html()
         let url = 'https://' + network + '.etherscan.io/address/' + address
         window.open(url,'_blank');
       }
@@ -734,7 +734,7 @@
               <tbody>
                 <td class="table-label">App Contract:</td>
                 <td class="table-value">
-                  <input id="luckyDrawContractAddress" class="input is-rounded" style="width:27em;" type="text" disabled />
+                  <span id="luckyDrawContractAddress"></span>
                   <a href="javascript:openAppContractOnEtherScan();" style="margin-left: 8px;">
                     <i class="fas fa-lg fa-external-link-alt"></i>
                   </a>
@@ -757,7 +757,7 @@
           <table class="info">
             <tbody>
               <tr>
-                <td class="table-label">account:</td>
+                <td class="table-label">Account:</td>
                 <td class="table-value">
                   <span id="eth_address"></span>
                   <a href="javascript:openUserAddressOnEtherScan();" style="margin-left: 8px;">
@@ -766,7 +766,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="table-label">ether:</td>
+                <td class="table-label">Ether:</td>
                 <td class="table-value"><span id="balance"></span></td>
               </tr>
             </tbody>
