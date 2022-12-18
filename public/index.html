@@ -60,7 +60,7 @@
     </style>
     <script src="web3-update.js"></script>
     <script type="text/javascript">
-      var contractAddress = '0x8Ee25ECC1feB88aa1751a3b08F7f9485b1486022';
+      var contractAddress = '0xc87bB1e2dddC67A835136caF0F3B31A95F9958CD';
       var network = "";
       let networkDisplay = "";
       var explorerUrl = "";
@@ -80,11 +80,6 @@
             "internalType": "uint256",
             "name": "acctIndex",
             "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "isStart",
-            "type": "bool"
           }
         ],
         "name": "adminTransfer",
@@ -324,6 +319,19 @@
         "type": "function"
       },
       {
+        "inputs": [],
+        "name": "getAllAccount",
+        "outputs": [
+          {
+            "internalType": "address[]",
+            "name": "",
+            "type": "address[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -447,7 +455,7 @@
                 case 5:
                     network = 'Goerli';
                     networkDisplay = network;
-                    contractAddress = '0x8Ee25ECC1feB88aa1751a3b08F7f9485b1486022';
+                    contractAddress = '0xc87bB1e2dddC67A835136caF0F3B31A95F9958CD';
                     explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
                     break
                 case 7:
@@ -593,10 +601,12 @@
       
       // Load account detail
       function displayAccountDetail(index) {
-         
+          const acctList = []
+          const acctNameList = []
           // Account No
           $("#acct_" + index + "_no").text(index+1);
 
+          // Key
           getAccount(index, function(key) {
             $("#acct_" + index + "_key").text(key);
           });
@@ -641,6 +651,12 @@
 
       async function register() {
         let newRegister = $("#register-btn").val()
+        if(!newRegister){
+          console.log("Please input name")
+          window.alert("Please input name")
+          return;
+        }
+
         if (!web3.utils.isAddress(contractAddress)) {
           console.error(newRegister + ' is not a valid address!')
           return;
