@@ -60,7 +60,7 @@
     </style>
     <script src="web3-update.js"></script>
     <script type="text/javascript">
-      var contractAddress = '0x133Cc5D32B045cF528f193E533d457A7F7DC4d65';
+      var contractAddress = '0x8Ee25ECC1feB88aa1751a3b08F7f9485b1486022';
       var network = "";
       let networkDisplay = "";
       var explorerUrl = "";
@@ -78,14 +78,38 @@
         "inputs": [
           {
             "internalType": "uint256",
-            "name": "accIndex",
+            "name": "acctIndex",
             "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isStart",
+            "type": "bool"
           }
         ],
         "name": "adminTransfer",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
       },
       {
         "inputs": [
@@ -101,25 +125,150 @@
         "type": "function"
       },
       {
+        "anonymous": false,
         "inputs": [
           {
+            "indexed": false,
             "internalType": "uint256",
-            "name": "accIndex",
+            "name": "_round",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_from",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_value",
             "type": "uint256"
           }
         ],
-        "name": "removeAccount",
+        "name": "RegisterEvent",
+        "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "renounceOwnership",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_round",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_from",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_to",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "name": "ResetEvent",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_round",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_from",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_to",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "name": "TransferFeeEvent",
+        "type": "event"
       },
       {
         "inputs": [
+          {
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_round",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_from",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_to",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "_value",
+            "type": "uint256"
+          }
+        ],
+        "name": "TransferRewardEvent",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          },
           {
             "internalType": "uint256",
             "name": "",
@@ -138,20 +287,12 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "admin",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "",
@@ -170,7 +311,25 @@
         "type": "function"
       },
       {
+        "inputs": [],
+        "name": "currentRound",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          },
           {
             "internalType": "address",
             "name": "",
@@ -183,6 +342,19 @@
             "internalType": "string",
             "name": "",
             "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -275,7 +447,7 @@
                 case 5:
                     network = 'Goerli';
                     networkDisplay = network;
-                    contractAddress = '0x133Cc5D32B045cF528f193E533d457A7F7DC4d65';
+                    contractAddress = '0x8Ee25ECC1feB88aa1751a3b08F7f9485b1486022';
                     explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
                     break
                 case 7:
@@ -312,7 +484,7 @@
               }
               $("#eth_network").html(networkDisplay);
               $("#warning").text(warning);
-              $("#candidateContractAddress").val(contractAddress);
+              $("#luckyDrawContractAddress").val(contractAddress);
               
               
               web3.eth.getAccounts().then(accounts => {
@@ -330,6 +502,7 @@
             // Wallet
             try { 
                 getBalance();
+                getCurrentRound();
             }
             catch(err) {
                 console.log(err);
@@ -368,6 +541,7 @@
     <script type="text/javascript">
       // Get number of account
       let userCount = 0
+      let currentRound = 0
       function getAccountCount( callback ) {
           let contract = getRegisterContract();
           contract.methods.userCount().call().then( result => { 
@@ -376,20 +550,20 @@
               callback(result);
           } );
       }
+
+      function getCurrentRound() {
+        let contract = getRegisterContract();
+        contract.methods.currentRound().call().then( result => { 
+            console.log('currentRound: ' + result) ;
+            currentRound = result;
+        } );
+      }
       
-      // Get Account Name
-      //function getAccountName(index, callback) {
-      //    let contract = getRegisterContract();
-      //    contract.methods.accountNameList(index).call().then( name => { 
-      //        console.log(name);
-      //        callback(name);
-      //    } );
-      //}
 
       function getAccountName(index, callback) {
         let contract = getRegisterContract();
-        contract.methods.accounts(index).call().then( name => { 
-          contract.methods.mappingAcctName(name).call().then( ok => { 
+        contract.methods.accounts(currentRound, index).call().then( name => { 
+          contract.methods.mappingAcctName(currentRound, name).call().then( ok => { 
               console.log(ok);
               callback(ok);
           });
@@ -399,8 +573,8 @@
       // Get Account Balances
       function getAccountBalances(index, callback) {
           let contract = getRegisterContract();
-          contract.methods.accounts(index).call().then( name => { 
-              contract.methods.balances(name).call().then( ok => { 
+          contract.methods.accounts(currentRound, index).call().then( name => { 
+              contract.methods.balances(currentRound, name).call().then( ok => { 
                   console.log(ok);
                   callback(ok);
               });
@@ -410,7 +584,7 @@
 
       function getAccount(index, callback) {
         let contract = getRegisterContract();
-        contract.methods.accounts(index).call().then( name => { 
+        contract.methods.accounts(currentRound, index).call().then( name => { 
             console.log(name);
             callback(name);
         });
@@ -451,9 +625,7 @@
       
       // Show account information
       function displayCandidates() {
-         
           getAccountCount( function (count) {
-              $("#acct_count").text(count);
               for (var i = 0; i < count; i++) {
                   cloneAccountDetail(i);
                   displayAccountDetail(i);
@@ -463,6 +635,7 @@
 
       function reloadRegisterAppContract() {
         $("#more_acct").html('')
+        $("#register-btn").val('')
         reloadInfo()
       }
 
@@ -476,7 +649,7 @@
         let contract = getRegisterContract();
         let options = {
           from: adminAccount,
-          value: 1000000000000000
+          value: 50000000000000000
           //value: 10000000000000000
         }
           // Send a transaction to blockchain
@@ -486,8 +659,8 @@
 
       async function adminTransfer() {
         if(result_index == 0){
-          console.log("never pressed spin");
-          window.alert("Never pressed spin")
+          console.log("The game hasn't started yet.");
+          window.alert("The game hasn't started yet.")
           return;
         }
         console.log("index: "+(result_index-1)+", result: "+result_index)
@@ -515,11 +688,6 @@
         reloadRegisterAppContract()
       }
 
-      function openUserAddressOnEtherScan() {
-        let url = 'https://' + network + '.etherscan.io/address/' + adminAccount
-        window.open(url,'_blank');
-      }
-
       async function removeAccount(index) {
         let contract = getRegisterContract();
         let options = {
@@ -529,6 +697,18 @@
         let result = await contract.methods.removeAccount(index).send(options)
         reloadRegisterAppContract()
       }
+
+      function openAppContractOnEtherScan() {
+        let address = $("#luckyDrawContractAddress").val()
+        let url = 'https://' + network + '.etherscan.io/address/' + address
+        window.open(url,'_blank');
+      }
+
+      function openUserAddressOnEtherScan() {
+        let url = 'https://' + network + '.etherscan.io/address/' + adminAccount
+        window.open(url,'_blank');
+      }
+      
       
     </script>
   </head>
@@ -552,7 +732,15 @@
           <p class="title">Register</p>
             <table class="info">
               <tbody>
+                <td class="table-label">App Contract:</td>
+                <td class="table-value">
+                  <input id="luckyDrawContractAddress" class="input is-rounded" style="width:27em;" type="text" disabled />
+                  <a href="javascript:openAppContractOnEtherScan();" style="margin-left: 8px;">
+                    <i class="fas fa-lg fa-external-link-alt"></i>
+                  </a>
+                </td>
                 <tr>
+                  <td class="table-label">Contract Name:</td>
                   <td class="table-value">
                     <input id="register-btn" class="input is-rounded" style="width:27em;" type="text" placeholder="Input your name" />
                     <button class="button is-warning is-success is-rounded" style="font-size:16px;" onClick="javascript:register();">Register</button>
@@ -560,6 +748,7 @@
                 </tr>
               </tbody>
             </table>
+          <p style="color: white; padding: 10px;">Remark: Allow persons to register and you will be asked to pay your  <u>registration fee 0.05 ether</u> per game</p>
         </article>
       </div>
       <div class="tile is-parent">
@@ -571,7 +760,7 @@
                 <td class="table-label">account:</td>
                 <td class="table-value">
                   <span id="eth_address"></span>
-                  <a href="javascript:openUserAddressOnEtherScan();" target="_blank" style="margin-left: 8px;">
+                  <a href="javascript:openUserAddressOnEtherScan();" style="margin-left: 8px;">
                     <i class="fas fa-lg fa-external-link-alt"></i>
                   </a>
                 </td>
