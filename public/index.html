@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucky Draw App</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style type="text/css">
+      .p_network {
+          border: 4px solid;
+          border-radius: 10px;
+          padding: 10px;
+          border-color: #2196F3;
+          text-align: center;
+          width: 15em;
+          margin: auto;
+          margin-top: 20px;
+          margin-bottom: 20px;
+      }
+      .p_warning {
+          padding: 10px;
+          text-align: center;
+          margin: auto;
+          color: red;
+      }
+
+      .title {
+          text-align: center;
+          margin: auto;
+          margin-top: 9px;
+          margin-bottom: 20px;
+      }
+      
+      table.info tr {
+          line-height: 2em;
+      }
+      
+      table.info .table-label {
+          width: 10em;
+          margin-right: 20px;
+          font-weight: bold;
+      }
+
+      table.info .table-value {
+        word-break: break-all;
+      }
+
+      .candidate_name {
+          font-size: 26px;
+          margin-bottom: 16px;
+      }
+
+      .candidate_total_vote {
+        font-size: 50px;
+      }
+    </style>
+    <script src="web3-update.js"></script>
+    <script type="text/javascript">
+      var contractAddress = '0x133Cc5D32B045cF528f193E533d457A7F7DC4d65';
+      var network = "";
+      let networkDisplay = "";
+      var explorerUrl = "";
+      var adminAccount = '';
+      var warning = "";
+      let abi = [
+      {
+        "inputs": [],
+        "name": "adminReset",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "accIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "adminTransfer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "accountName",
+            "type": "string"
+          }
+        ],
+        "name": "register",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "accIndex",
+            "type": "uint256"
+          }
+        ],
+        "name": "removeAccount",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "accounts",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "admin",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "balances",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "mappingAcctName",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "userCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "count",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ]
+    </script>
+    <script type="text/javascript">
+      window.addEventListener('load', function() {
+
+          // Modern dapp browsers...
+          if (window.ethereum) {
+              web3 = new Web3(ethereum);
+
+              try { 
+                // Request account access if needed
+                ethereum.enable().then(result => {
+                  // Now you can start your app & access web3 freely:
+                  startApp()
+                })
+              }
+              catch(err) {
+                console.log(err);
+              }
+          }
+          // Legacy dapp browsers, checking if Web3 has been injected by the browser (Mist/MetaMask)
+          else if (typeof web3 !== 'undefined') {
+            // Use Mist/MetaMask's provider
+            web3 = new Web3(web3.currentProvider);
+
+            // Now you can start your app & access web3 freely:
+            startApp();
+
+          } else {
+            console.log('No web3? You should consider trying MetaMask!')
+            // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+            web3 = new Web3( new Web3.providers.HttpProvider( "https://kovan.infura.io/v3/YOUR_INFURA_KEY" ));
+            //web3 = new Web3( new Web3.providers.HttpProvider( "http://localhost:8545/" ));
+            // web3 = new Web3( new Web3.providers.HttpProvider( "https://rpc.tch.in.th" ));
+            
+            // Now you can start your app & access web3 freely:
+            startApp();
+          }
+        })
+    
+        
+        // Get current network
+        function startApp() {
+            web3.eth.net.getId().then(netId => {
+            // web3.version.getNetwork((err, netId) => {
+              console.log('netId: ' + netId)
+              switch (netId) {
+                case 1:
+                    network = 'Mainnet';
+                    networkDisplay = network;
+                    warning = 'please switch your network to Kovan or Thai Chain';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 2:
+                    network = 'Deprecated Morden';
+                    networkDisplay = network;
+                    warning = 'please switch your network to Kovan or Thai Chain';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 3:
+                    network = 'Ropsten';
+                    networkDisplay = network;
+                    warning = 'please switch your network to Kovan or Thai Chain';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 4:
+                    network = 'Rinkeby';
+                    networkDisplay = network;
+                    contractAddress = '0x6075b70b4f94af25e047fac6a538ea06a5206bca';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 5:
+                    network = 'Goerli';
+                    networkDisplay = network;
+                    contractAddress = '0x133Cc5D32B045cF528f193E533d457A7F7DC4d65';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 7:
+                    network = 'Thai Chain';
+                    networkDisplay = network;
+                    contractAddress = '0x0898424ddf8f9478aad9f2280a6480f1858ad1c6';
+                    explorerUrl = "https://exp.tch.in.th/tx/"
+                    break
+                case 42:
+                    network = 'Kovan';
+                    networkDisplay = network;
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 420:
+                    network = 'Goerli-Optimism';
+                    networkDisplay = 'Goerli Optimism';
+                    contractAddress = '0x02302b985d82a3f8dd9ba9d0bcea620bbcbeec63';
+                    explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                    break
+                case 1337:
+                    network = 'Kovan - Optimism';
+                    networkDisplay = '<strong>Kovan Optimism</strong><br/>(Level 2 Ethereum)';
+                    contractAddress = '0xE6dCD042c4dDaC0f390A7B1CB8B4D60DD20b6338';
+                    explorerUrl = "https://kovan-l2-explorer.surge.sh/tx/";
+                    break
+                case 5777:
+                    network = 'Ganache';
+                    networkDisplay = network;
+                    break
+                default:
+                    network = 'Unknown';
+                    networkDisplay = network;
+                    warning = 'please switch your network to Kovan or Thai Chain';
+              }
+              $("#eth_network").html(networkDisplay);
+              $("#warning").text(warning);
+              $("#candidateContractAddress").val(contractAddress);
+              
+              
+              web3.eth.getAccounts().then(accounts => {
+                adminAccount = accounts[0];
+                $("#eth_address").text(adminAccount);
+
+                reloadInfo();
+              })
+              
+            })
+        }
+        
+        function reloadInfo() {
+
+            // Wallet
+            try { 
+                getBalance();
+            }
+            catch(err) {
+                console.log(err);
+            }
+
+            displayCandidates();
+            
+        }
+        
+        // Get block info
+        function getBlock() {
+            web3.eth.getBlock(48, function(error, result){
+                if(!error) {
+                    console.log(JSON.stringify(result));
+                    $("#balance").html(JSON.stringify(result));
+                } else {
+                    console.error(error);
+                }
+            })
+        }
+        
+        // Get account balance
+        function getBalance() {
+          web3.eth.getBalance(adminAccount).then(result => {
+              $("#balance").html(web3.utils.fromWei(result));
+          }); // getbalance account
+        }
+
+        // Get katin token contract
+        function getRegisterContract() {
+            let contract = new web3.eth.Contract(abi, contractAddress)
+            
+            return contract;
+        }
+    </script>
+    <script type="text/javascript">
+      // Get number of account
+      let userCount = 0
+      function getAccountCount( callback ) {
+          let contract = getRegisterContract();
+          contract.methods.userCount().call().then( result => { 
+              console.log('getUserCount: ' + result) ;
+              userCount = result;
+              callback(result);
+          } );
+      }
+      
+      // Get Account Name
+      //function getAccountName(index, callback) {
+      //    let contract = getRegisterContract();
+      //    contract.methods.accountNameList(index).call().then( name => { 
+      //        console.log(name);
+      //        callback(name);
+      //    } );
+      //}
+
+      function getAccountName(index, callback) {
+        let contract = getRegisterContract();
+        contract.methods.accounts(index).call().then( name => { 
+          contract.methods.mappingAcctName(name).call().then( ok => { 
+              console.log(ok);
+              callback(ok);
+          });
+      });
+    }
+
+      // Get Account Balances
+      function getAccountBalances(index, callback) {
+          let contract = getRegisterContract();
+          contract.methods.accounts(index).call().then( name => { 
+              contract.methods.balances(name).call().then( ok => { 
+                  console.log(ok);
+                  callback(ok);
+              });
+          });
+          
+      }
+
+      function getAccount(index, callback) {
+        let contract = getRegisterContract();
+        contract.methods.accounts(index).call().then( name => { 
+            console.log(name);
+            callback(name);
+        });
+        
+    }
+      
+      // Load account detail
+      function displayAccountDetail(index) {
+         
+          // Account No
+          $("#acct_" + index + "_no").text(index+1);
+
+          getAccount(index, function(key) {
+            $("#acct_" + index + "_key").text(key);
+          });
+
+          // Name
+          getAccountName(index, function(name) {
+              $("#acct_" + index + "_name").text(name);
+          });
+          
+          // Total balances
+          getAccountBalances(index, function(total) {
+              $("#acct_" + index + "_balances").text(total);
+          });
+
+      }
+      
+      function cloneAccountDetail(index) {
+          let a = $("#acct_copy").clone();
+          $(a).find(".acct_no").attr("id", "acct_" + index + "_no");
+          $(a).find(".acct_key").attr("id", "acct_" + index + "_key");
+          $(a).find(".acct_name").attr("id", "acct_" + index + "_name");
+          $(a).find(".acct_balances").attr("id", "acct_" + index + "_balances");
+          $(a).find(".acct_remove_button").attr("onClick", "javascript:removeAccount(" + index + ");");
+          $(a).appendTo("#more_acct");
+      }
+      
+      // Show account information
+      function displayCandidates() {
+         
+          getAccountCount( function (count) {
+              $("#acct_count").text(count);
+              for (var i = 0; i < count; i++) {
+                  cloneAccountDetail(i);
+                  displayAccountDetail(i);
+              }
+          });
+      }
+
+      function reloadRegisterAppContract() {
+        $("#more_acct").html('')
+        reloadInfo()
+      }
+
+      async function register() {
+        let newRegister = $("#register-btn").val()
+        if (!web3.utils.isAddress(contractAddress)) {
+          console.error(newRegister + ' is not a valid address!')
+          return;
+        }
+
+        let contract = getRegisterContract();
+        let options = {
+          from: adminAccount,
+          value: 1000000000000000
+          //value: 10000000000000000
+        }
+          // Send a transaction to blockchain
+        let result = await contract.methods.register(newRegister).send(options)
+        reloadRegisterAppContract()
+      }
+
+      async function adminTransfer() {
+        if(result_index == 0){
+          console.log("never pressed spin");
+          window.alert("Never pressed spin")
+          return;
+        }
+        console.log("index: "+(result_index-1)+", result: "+result_index)
+        let contract = getRegisterContract();
+        let options = {
+          from: adminAccount
+        }
+          // Send a transaction to blockchain
+        let result = await contract.methods.adminTransfer(result_index-1).send(options)
+        reloadRegisterAppContract()
+      }
+
+      async function adminReset() {
+        if(userCount == 0){
+          console.log("No user");
+          window.alert("No user");
+          return;
+        }
+        let contract = getRegisterContract();
+        let options = {
+          from: adminAccount
+        }
+          // Send a transaction to blockchain
+        let result = await contract.methods.adminReset().send(options)
+        reloadRegisterAppContract()
+      }
+
+      function openUserAddressOnEtherScan() {
+        let url = 'https://' + network + '.etherscan.io/address/' + adminAccount
+        window.open(url,'_blank');
+      }
+
+      async function removeAccount(index) {
+        let contract = getRegisterContract();
+        let options = {
+          from: adminAccount
+        }
+        // Send a transaction to blockchain
+        let result = await contract.methods.removeAccount(index).send(options)
+        reloadRegisterAppContract()
+      }
+      
+    </script>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title" style="color: white;"">
+            Lucky Draw App
+          </h1>
+        </div>
+      </div>
+    </section>
+    <p class="p_network">
+      <span style="color: wheat;">Network: </span>
+      <span id="eth_network" style="color: wheat;"></span>
+    </p>
+    <div class="tile is-ancestor" style="margin-left: 10px; margin-right: 10px;">
+      <div class="tile is-parent">
+        <article class="tile is-child box notification is-info">
+          <p class="title">Register</p>
+            <table class="info">
+              <tbody>
+                <tr>
+                  <td class="table-value">
+                    <input id="register-btn" class="input is-rounded" style="width:27em;" type="text" placeholder="Input your name" />
+                    <button class="button is-warning is-success is-rounded" style="font-size:16px;" onClick="javascript:register();">Register</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </article>
+      </div>
+      <div class="tile is-parent">
+        <article class="tile is-child box notification is-info">
+          <p class="title">Your Wallet</p>
+          <table class="info">
+            <tbody>
+              <tr>
+                <td class="table-label">account:</td>
+                <td class="table-value">
+                  <span id="eth_address"></span>
+                  <a href="javascript:openUserAddressOnEtherScan();" target="_blank" style="margin-left: 8px;">
+                    <i class="fas fa-lg fa-external-link-alt"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-label">ether:</td>
+                <td class="table-value"><span id="balance"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </div>
+      
+    <div style="display:none;">
+      <div class="is-parent">
+        <table class="table table-borderless mb-0" style="width: 100%;">
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Address</th>
+              <th scope="col">Name</th>
+              <!-- <th scope="col">Ether</th>
+              <th scope="col"></th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="acct_copy" >
+              <td><p class="acct_no"></p></td>
+              <td><p class="acct_key"></p></td>
+              <td><p class="acct_name"></p></td>
+              <!-- <td><p class="acct_balances"></p></td> -->
+              <!-- <td><p><button class="acct_remove_button button is-danger is-rounded" style="height:25px; width:100px; " onClick="javascript:removeAccount(xx);">Remove</button></p></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+   
+
+    <table class="center" style="border:0px solid black; width: 95%;">
+      <tr>
+        <td style="border:0px solid black; width: 35%;">
+          <div class="bg-image h-100" style="background-color: #6095F0;">
+            <div class="mask d-flex align-items-center h-100">
+              <div class="container">
+                <div class="row justify-content-center">
+                  <div class="col-12">
+                    <div class="shadow-2-strong" style="background-color: #f5f7fa;">
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <div>
+                            <table class="table table-borderless mb-0" style="width: 100%;">
+                              <thead>
+                                <tr>
+                                  <th scope="col">No.</th>
+                                  <th scope="col">Address</th>
+                                  <th scope="col">Name</th>
+                                  <!-- <th scope="col">Ether</th>
+                                  <th scope="col"></th> -->
+                                </tr>
+                              </thead>
+                              <tbody id="more_acct"></tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <!-- <div class="wrapper"> -->
+            <div class="container">
+              <canvas id="wheel"></canvas>
+              <button id="spin-btn">Spin</button>
+              <img src="pngwing.com.png" alt="spinner-arrow" />
+            </div>
+            <div id="final-value" style="color: wheat;">
+              <p>Click On The Spin Button To Start</p>
+            </div>
+          <!-- </div> -->
+        </td>
+        <td style="border:0px solid black; width: 35%;">
+          <button class="button is-warning is-success is-rounded" style="font-size:16px;" onClick="javascript:adminTransfer();">Transfer</button>
+          <button class="button is-warning is-danger is-rounded" style="font-size:16px;" onClick="javascript:adminReset();">Reset Game</button>
+        </td>
+      </tr>
+    </table>
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!-- Chart JS Plugin for displaying text over chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
