@@ -69,7 +69,7 @@ function startApp() {
         case 5:
             network = 'Goerli';
             networkDisplay = network;
-            contractAddress = '0xe5E51A4DF6F5682B6C644De473a0D549aCfa9227';
+            contractAddress = '0x189049E278ADAD6A7b469958f461C13124434309';
             explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
             break
         case 7:
@@ -287,6 +287,11 @@ async function register() {
 }
 
 async function adminTransfer() {
+  if(accountCount == 0){
+    window.alert("Must have 6 players")
+    console.log("Must have 6 players")
+    return;
+  }
   if(result_index == 0){
     console.log("The game hasn't started yet.");
     window.alert("The game hasn't started yet.")
@@ -304,8 +309,8 @@ async function adminTransfer() {
 
 async function adminReset() {
   if(accountCount == 0){
-    console.log("No user");
-    window.alert("No user");
+    console.log("No player");
+    window.alert("No player");
     return;
   }
   let contract = getRegisterContract();
