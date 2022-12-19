@@ -120,12 +120,12 @@ function startApp() {
 }
 
 function reloadInfo() {
-
     // Wallet
     try { 
         getBalance();
         getCurrentRound();
         getAllAccount();
+        getAdminAccount();
     }
     catch(err) {
         console.log(err);
@@ -162,9 +162,6 @@ function getRegisterContract() {
 }
 
 // Get number of account
-let accountCount = 0
-let currentRound = 0
-let allAccount = []
 function getAccountCount( callback ) {
     let contract = getRegisterContract();
     contract.methods.accountCount().call().then( result => { 
@@ -187,6 +184,14 @@ function getAllAccount() {
   contract.methods.allAccount().call().then( result => { 
       console.log('allAccount: ' + result) ;
       allAccount = result;
+  } );
+}
+
+function getAdminAccount() {
+  let contract = getRegisterContract();
+  contract.methods.owner().call().then( result => { 
+      console.log('adminAccount: ' + result) ;
+      adminAccount = result;
   } );
 }
 
@@ -224,8 +229,6 @@ function getAccount(index, callback) {
 
 // Load account detail
 function displayAccountDetail(index) {
-    const acctList = []
-    const acctNameList = []
     // Account No
     $("#acct_" + index + "_no").text(index+1);
 

@@ -156,13 +156,19 @@
             </div>
           <!-- </div> -->
         </td>
-        <td style="border:0px solid black; width: 35%;">
-          <button class="button is-warning is-success is-rounded" style="font-size:16px;" onClick="javascript:adminTransfer();">Transfer</button>
-          <button class="button is-warning is-danger is-rounded" style="font-size:16px;" onClick="javascript:adminReset();">Reset Game</button>
+        <td style="border:0px solid black; width: 35%; text-align: center; vertical-align: middle;">
+          <button id="send-reward-btn"  class="button is-warning is-success is-rounded" style="font-size:25px;" onClick="javascript:adminTransfer();">Send Reward</button>
+          <button id="reset-game-btn" class="button is-warning is-danger is-rounded" style="font-size:25px;" onClick="javascript:adminReset();">Reset Game</button>
         </td>
       </tr>
     </table>
     <!-- Script -->
     <script src="spin-wheel.js"></script>
+    <script>        
+      if(userAccount == adminAccount) {
+        $("#send-reward-btn").show();
+        $("#reset-game-btn").show();
+      }
+    </script>
   </body>
 </html>

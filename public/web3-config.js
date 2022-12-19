@@ -4,6 +4,10 @@ let networkDisplay = "";
 var explorerUrl = "";
 var userAccount = '';
 var warning = "";
+let accountCount = 0
+let currentRound = 0
+let allAccount = []
+let adminAccount = ""
 let abi = [
 	{
 		"inputs": [],
