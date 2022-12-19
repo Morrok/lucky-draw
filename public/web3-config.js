@@ -2,7 +2,7 @@ var contractAddress = '0x189049E278ADAD6A7b469958f461C13124434309';
 var network = "";
 let networkDisplay = "";
 var explorerUrl = "";
-var adminAccount = '';
+var userAccount = '';
 var warning = "";
 let abi = [
 	{

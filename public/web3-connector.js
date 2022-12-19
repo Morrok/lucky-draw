@@ -110,8 +110,8 @@ function startApp() {
       
       
       web3.eth.getAccounts().then(accounts => {
-        adminAccount = accounts[0];
-        $("#eth_address").text(adminAccount);
+        userAccount = accounts[0];
+        $("#eth_address").text(userAccount);
 
         reloadInfo();
       })
@@ -125,6 +125,7 @@ function reloadInfo() {
     try { 
         getBalance();
         getCurrentRound();
+        getAllAccount();
     }
     catch(err) {
         console.log(err);
@@ -148,7 +149,7 @@ function getBlock() {
 
 // Get account balance
 function getBalance() {
-  web3.eth.getBalance(adminAccount).then(result => {
+  web3.eth.getBalance(userAccount).then(result => {
       $("#balance").html(web3.utils.fromWei(result));
   }); // getbalance account
 }
@@ -163,6 +164,7 @@ function getRegisterContract() {
 // Get number of account
 let accountCount = 0
 let currentRound = 0
+let allAccount = []
 function getAccountCount( callback ) {
     let contract = getRegisterContract();
     contract.methods.accountCount().call().then( result => { 
@@ -177,6 +179,14 @@ function getCurrentRound() {
   contract.methods.currentRound().call().then( result => { 
       console.log('currentRound: ' + result) ;
       currentRound = result;
+  } );
+}
+
+function getAllAccount() {
+  let contract = getRegisterContract();
+  contract.methods.allAccount().call().then( result => { 
+      console.log('allAccount: ' + result) ;
+      allAccount = result;
   } );
 }
 
@@ -265,8 +275,14 @@ function reloadRegisterAppContract() {
 async function register() {
   let newRegister = $("#register-btn").val()
   if(!newRegister){
-    console.log("Please input name")
-    window.alert("Please input name")
+    console.log("Please input name.")
+    window.alert("Please input name.")
+    return;
+  }
+
+  if(allAccount.includes(userAccount)){
+    console.log("An account cannot register twice.")
+    window.alert("An account cannot register twice.")
     return;
   }
 
@@ -277,7 +293,7 @@ async function register() {
 
   let contract = getRegisterContract();
   let options = {
-    from: adminAccount,
+    from: userAccount,
     value: 50000000000000000
     //value: 10000000000000000
   }
@@ -288,8 +304,8 @@ async function register() {
 
 async function adminTransfer() {
   if(accountCount == 0){
-    window.alert("Must have 6 players")
-    console.log("Must have 6 players")
+    window.alert("Must have 6 players.")
+    console.log("Must have 6 players.")
     return;
   }
   if(result_index == 0){
@@ -300,7 +316,7 @@ async function adminTransfer() {
   console.log("index: "+(result_index-1)+", result: "+result_index)
   let contract = getRegisterContract();
   let options = {
-    from: adminAccount
+    from: userAccount
   }
     // Send a transaction to blockchain
   let result = await contract.methods.adminTransfer(result_index-1).send(options)
@@ -315,7 +331,7 @@ async function adminReset() {
   }
   let contract = getRegisterContract();
   let options = {
-    from: adminAccount
+    from: userAccount
   }
     // Send a transaction to blockchain
   let result = await contract.methods.adminReset().send(options)
@@ -325,7 +341,7 @@ async function adminReset() {
 async function removeAccount(index) {
   let contract = getRegisterContract();
   let options = {
-    from: adminAccount
+    from: userAccount
   }
   // Send a transaction to blockchain
   let result = await contract.methods.removeAccount(index).send(options)
@@ -339,6 +355,6 @@ function openAppContractOnEtherScan() {
 }
 
 function openUserAddressOnEtherScan() {
-  let url = 'https://' + network + '.etherscan.io/address/' + adminAccount
+  let url = 'https://' + network + '.etherscan.io/address/' + userAccount
   window.open(url,'_blank');
 }
