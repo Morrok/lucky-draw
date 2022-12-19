@@ -60,7 +60,7 @@
     </style>
     <script src="web3-update.js"></script>
     <script type="text/javascript">
-      var contractAddress = '0xc87bB1e2dddC67A835136caF0F3B31A95F9958CD';
+      var contractAddress = '0xe5E51A4DF6F5682B6C644De473a0D549aCfa9227';
       var network = "";
       let networkDisplay = "";
       var explorerUrl = "";
@@ -258,6 +258,19 @@
         "type": "event"
       },
       {
+        "inputs": [],
+        "name": "accountCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -276,6 +289,19 @@
             "internalType": "address",
             "name": "",
             "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "allAccount",
+        "outputs": [
+          {
+            "internalType": "address[]",
+            "name": "",
+            "type": "address[]"
           }
         ],
         "stateMutability": "view",
@@ -319,19 +345,6 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "getAllAccount",
-        "outputs": [
-          {
-            "internalType": "address[]",
-            "name": "",
-            "type": "address[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -363,19 +376,6 @@
             "internalType": "address",
             "name": "",
             "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "userCount",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "count",
-            "type": "uint256"
           }
         ],
         "stateMutability": "view",
@@ -455,7 +455,7 @@
                 case 5:
                     network = 'Goerli';
                     networkDisplay = network;
-                    contractAddress = '0xc87bB1e2dddC67A835136caF0F3B31A95F9958CD';
+                    contractAddress = '0xe5E51A4DF6F5682B6C644De473a0D549aCfa9227';
                     explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
                     break
                 case 7:
@@ -548,13 +548,13 @@
     </script>
     <script type="text/javascript">
       // Get number of account
-      let userCount = 0
+      let accountCount = 0
       let currentRound = 0
       function getAccountCount( callback ) {
           let contract = getRegisterContract();
-          contract.methods.userCount().call().then( result => { 
-              console.log('getUserCount: ' + result) ;
-              userCount = result;
+          contract.methods.accountCount().call().then( result => { 
+              console.log('getAccountCount: ' + result) ;
+              accountCount = result;
               callback(result);
           } );
       }
@@ -690,7 +690,7 @@
       }
 
       async function adminReset() {
-        if(userCount == 0){
+        if(accountCount == 0){
           console.log("No user");
           window.alert("No user");
           return;
