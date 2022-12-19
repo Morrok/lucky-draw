@@ -81,3 +81,51 @@
     margin-left:auto; 
     margin-right:auto;
   }
+
+  .p_network {
+    border: 4px solid;
+    border-radius: 10px;
+    padding: 10px;
+    border-color: #2196F3;
+    text-align: center;
+    width: 15em;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .p_warning {
+      padding: 10px;
+      text-align: center;
+      margin: auto;
+      color: red;
+  }
+
+  .title {
+      text-align: center;
+      margin: auto;
+      margin-top: 9px;
+      margin-bottom: 20px;
+  }
+
+  table.info tr {
+      line-height: 2em;
+  }
+
+  table.info .table-label {
+      width: 10em;
+      margin-right: 20px;
+      font-weight: bold;
+  }
+
+  table.info .table-value {
+    word-break: break-all;
+  }
+
+  .candidate_name {
+      font-size: 26px;
+      margin-bottom: 16px;
+  }
+
+  .candidate_total_vote {
+    font-size: 50px;
+  }
