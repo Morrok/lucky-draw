@@ -72,8 +72,12 @@ const valueGenerator = (angleValue) => {
       console.log("angleValue:", angleValue);
       let name = document.getElementById("acct_"+(result_index-1)+"_name");
       if (name === null){
+        $("#send-reward-btn-modal").hide();
         modalValueElement.textContent = `No winner.`;
       } else {
+        if(userAccount == adminAccount) {
+          $("#send-reward-btn-modal").show();
+        }
         modalValueElement.textContent = `Congratulations the winner is  "${name.innerHTML}".`;
       }
       spinBtn.disabled = false;

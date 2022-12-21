@@ -272,6 +272,7 @@ function displayCandidates() {
 function reloadRegisterAppContract() {
   $("#more_acct").html('')
   $("#register-btn").val('')
+  $("#myModal").hide()
   reloadInfo()
 }
 
