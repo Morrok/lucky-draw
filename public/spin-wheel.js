@@ -69,6 +69,7 @@ const valueGenerator = (angleValue) => {
       finalValue.innerHTML = `<p>Value: ${i.value}</p>`;
       modal.style.display = "block";
       result_index = i.value;
+      console.log("angleValue:", angleValue);
       let name = document.getElementById("acct_"+(result_index-1)+"_name");
       if (name === null){
         modalValueElement.textContent = `No winner.`;
