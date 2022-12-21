@@ -1,6 +1,9 @@
 const wheel = document.getElementById("wheel");
 const spinBtn = document.getElementById("spin-btn");
 const finalValue = document.getElementById("final-value");
+const modal = document.getElementById("myModal");
+const spanModal = document.getElementsByClassName("close")[0];
+const modalValueElement = document.getElementById("modal-value");
 //Object that stores values of minimum and maximum angle for a value
 const rotationValues = [
   { minDegree: 0, maxDegree: 30, value: 2 },
@@ -64,7 +67,14 @@ const valueGenerator = (angleValue) => {
     //if the angleValue is between min and max then display it
     if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
       finalValue.innerHTML = `<p>Value: ${i.value}</p>`;
+      modal.style.display = "block";
       result_index = i.value;
+      let name = document.getElementById("acct_"+(result_index-1)+"_name");
+      if (name === null){
+        modalValueElement.textContent = `No winner.`;
+      } else {
+        modalValueElement.textContent = `Congratulations the winner is  "${name.innerHTML}".`;
+      }
       spinBtn.disabled = false;
       break;
     }
@@ -104,3 +114,14 @@ spinBtn.addEventListener("click", () => {
     }
   }, 10);
 });
+
+spanModal.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
