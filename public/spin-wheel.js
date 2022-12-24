@@ -66,20 +66,21 @@ const valueGenerator = (angleValue) => {
   for (let i of rotationValues) {
     //if the angleValue is between min and max then display it
     if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
-      finalValue.innerHTML = `<p>Value: ${i.value}</p>`;
-      modal.style.display = "block";
       result_index = i.value;
-      console.log("angleValue:", angleValue);
       let name = document.getElementById("acct_"+(result_index-1)+"_name");
       if (name === null){
         $("#send-reward-btn-modal").hide();
         modalValueElement.textContent = `No winner.`;
+        finalValue.innerHTML = `<p>No winner.</p>`;
       } else {
         if(userAccount == adminAccount) {
           $("#send-reward-btn-modal").show();
         }
         modalValueElement.textContent = `Congratulations the winner is  "${name.innerHTML}".`;
+        finalValue.innerHTML = `<p>Winner: ${name.innerHTML}</p>`;
       }
+      modal.style.display = "block";
+      console.log("angleValue:", angleValue);
       spinBtn.disabled = false;
       break;
     }

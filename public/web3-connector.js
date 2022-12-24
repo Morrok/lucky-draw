@@ -112,7 +112,7 @@ function startApp() {
       web3.eth.getAccounts().then(accounts => {
         userAccount = accounts[0];
         $("#eth_address").text(userAccount);
-
+        
         reloadInfo();
       })
       
@@ -192,6 +192,10 @@ function getAdminAccount() {
   contract.methods.owner().call().then( result => { 
       console.log('adminAccount: ' + result) ;
       adminAccount = result;
+      if(userAccount == adminAccount) {
+        $("#send-reward-btn").show();
+        $("#reset-game-btn").show();
+      }
   } );
 }
 

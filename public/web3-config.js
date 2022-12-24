@@ -1,14 +1,14 @@
 var contractAddress = '0xD97a3DC0BBe1beAC47EA7F415800146dd1f436b9';
 var network = "";
-let networkDisplay = "";
+var networkDisplay = "";
 var explorerUrl = "";
 var userAccount = '';
+var adminAccount = '';
 var warning = "";
-let accountCount = 0
-let currentRound = 0
-let allAccount = []
-let adminAccount = ""
-let abi = [
+var accountCount = 0;
+var currentRound = 0;
+var allAccount = [];
+var abi = [
 	{
 		"inputs": [],
 		"name": "adminReset",
