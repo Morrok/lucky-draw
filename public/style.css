@@ -129,12 +129,12 @@
   .candidate_total_vote {
     font-size: 50px;
   }
-  /* #send-reward-btn  {
+  #send-reward-btn  {
     display: none;
   }
   #reset-game-btn  {
     display: none;
-  } */
+  }
   #send-reward-btn-modal  {
     display: none;
   }
@@ -175,26 +175,5 @@
     99%   {color: var(--color-3)}
     100%  {color: var(--color-1)}
   }
-  tbody {
-    tr {
-      &:hover {
-        background-color: rgba(255,255,255,0.3);
-      }
-    }
-    td {
-      position: relative;
-      &:hover {
-        &:before {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: -9999px;
-          bottom: -9999px;
-          background-color: rgba(255,255,255,0.2);
-          z-index: -1;
-        }
-      }
-    }
-  }
+  
   
