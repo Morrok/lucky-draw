@@ -278,6 +278,12 @@ function reloadRegisterAppContract() {
 
 async function register() {
   let newRegister = $("#register-btn").val()
+  if(newRegister.trim().length > 42 ){
+    console.log("Can't enter more than 42 characters.")
+    window.alert("Can't enter more than 42 characters.")
+    return;
+  }
+
   if(!newRegister){
     console.log("Please input name.")
     window.alert("Please input name.")
